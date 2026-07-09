@@ -1,0 +1,58 @@
+{
+  "name": "Invoice",
+  "type": "object",
+  "properties": {
+    "number": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "CZK"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "paid",
+        "pending",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "issued_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "paid_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "variable_symbol": {
+      "type": "string"
+    },
+    "pdf_url": {
+      "type": "string"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "bank_transfer",
+        "stripe"
+      ]
+    }
+  },
+  "required": [
+    "number",
+    "amount"
+  ]
+}

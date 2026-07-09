@@ -1,0 +1,33 @@
+{
+  "name": "MatchLog",
+  "type": "object",
+  "properties": {
+    "query_text": {
+      "type": "string"
+    },
+    "query_ean": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "score": {
+      "type": "number"
+    },
+    "matched_product_id": {
+      "type": "string"
+    },
+    "matched_name": {
+      "type": "string"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "ean",
+        "supplier_code",
+        "fuzzy",
+        "none"
+      ]
+    }
+  }
+}

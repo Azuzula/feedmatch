@@ -1,0 +1,24 @@
+{
+  "name": "SupplierDomain",
+  "type": "object",
+  "properties": {
+    "domain": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "category_filter": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "domain"
+  ]
+}

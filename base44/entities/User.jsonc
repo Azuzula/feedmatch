@@ -1,0 +1,61 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "api_key": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "default": "cz"
+    },
+    "billing_name": {
+      "type": "string"
+    },
+    "billing_company": {
+      "type": "string"
+    },
+    "billing_street": {
+      "type": "string"
+    },
+    "billing_city": {
+      "type": "string"
+    },
+    "billing_zip": {
+      "type": "string"
+    },
+    "billing_country": {
+      "type": "string",
+      "default": "CZ"
+    },
+    "billing_ico": {
+      "type": "string"
+    },
+    "subscription_status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "active",
+        "expired",
+        "none"
+      ],
+      "default": "trial"
+    },
+    "subscription_expiry": {
+      "type": "string",
+      "format": "date"
+    },
+    "trial_started_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

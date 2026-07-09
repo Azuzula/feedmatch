@@ -1,0 +1,64 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "feed_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "ean": {
+      "type": "string"
+    },
+    "supplier_code": {
+      "type": "string"
+    },
+    "purchase_price": {
+      "type": "number"
+    },
+    "sale_price": {
+      "type": "number"
+    },
+    "stock_qty": {
+      "type": "number"
+    },
+    "stock_unit": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "name_normalized": {
+      "type": "string"
+    },
+    "tokens": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "alternative_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "alt_tokens": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "match_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_match_score": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

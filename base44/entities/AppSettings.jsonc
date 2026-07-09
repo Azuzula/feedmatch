@@ -1,0 +1,63 @@
+{
+  "name": "AppSettings",
+  "type": "object",
+  "properties": {
+    "provider_name": {
+      "type": "string"
+    },
+    "provider_street": {
+      "type": "string"
+    },
+    "provider_city": {
+      "type": "string"
+    },
+    "provider_zip": {
+      "type": "string"
+    },
+    "provider_country": {
+      "type": "string",
+      "default": "CZ"
+    },
+    "provider_ico": {
+      "type": "string"
+    },
+    "provider_email": {
+      "type": "string"
+    },
+    "provider_phone": {
+      "type": "string"
+    },
+    "bank_account_cz": {
+      "type": "string"
+    },
+    "iban": {
+      "type": "string"
+    },
+    "swift": {
+      "type": "string"
+    },
+    "price_czk": {
+      "type": "number",
+      "default": 690
+    },
+    "price_eur": {
+      "type": "number",
+      "default": 27
+    },
+    "price_vat_note": {
+      "type": "string"
+    },
+    "terms_html": {
+      "type": "string"
+    },
+    "privacy_html": {
+      "type": "string"
+    },
+    "accessibility_html": {
+      "type": "string"
+    },
+    "roadmap_url": {
+      "type": "string"
+    }
+  }
+}

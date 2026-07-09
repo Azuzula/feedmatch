@@ -1,0 +1,92 @@
+{
+  "name": "Feed",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "xml_heureka",
+        "xml_custom",
+        "csv",
+        "tsv"
+      ],
+      "default": "xml_heureka"
+    },
+    "delimiter": {
+      "type": "string",
+      "default": ","
+    },
+    "mapping": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "ean": {
+          "type": "string"
+        },
+        "supplier_code": {
+          "type": "string"
+        },
+        "purchase_price": {
+          "type": "string"
+        },
+        "sale_price": {
+          "type": "string"
+        },
+        "stock_qty": {
+          "type": "string"
+        },
+        "stock_unit": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "item_path": {
+          "type": "string"
+        }
+      }
+    },
+    "sync_time": {
+      "type": "string",
+      "default": "03:00"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_sync_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_sync_status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "error",
+        "pending",
+        "never"
+      ],
+      "default": "never"
+    },
+    "last_sync_error": {
+      "type": "string"
+    },
+    "product_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "url",
+    "format"
+  ]
+}
