@@ -13,6 +13,7 @@ const TARGETS = [
 ];
 
 export default function FeedColumnMapper({ fields, mapping, onChange }) {
+  const cleanFields = Array.from(new Set((fields || []).map((f) => String(f).trim()).filter(Boolean)));
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {TARGETS.map((tgt) => (
@@ -22,7 +23,7 @@ export default function FeedColumnMapper({ fields, mapping, onChange }) {
             <SelectTrigger className="h-9"><SelectValue placeholder="— neurčeno —" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="__none__">— neurčeno —</SelectItem>
-              {fields.map((f) => <SelectItem key={f} value={f}>{f}</SelectItem>)}
+              {cleanFields.map((f) => <SelectItem key={f} value={f}>{f}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
