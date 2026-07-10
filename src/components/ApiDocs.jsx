@@ -14,6 +14,14 @@ export default function ApiDocs({ baseUrl }) {
       <p className="text-muted-foreground">API pro vývoj Chrome doplňku. Všechny požadavky vyžadují API klíč uživatele jako Bearer token. Doplněk si jednorázově stáhne produkty pro danou doménu a párování prvků webu s feedem dělá lokálně — na každý element se API nevolá.</p>
 
       <div className="space-y-2">
+        <h4 className="font-semibold font-mono">GET /functions/getDomainsForExtension</h4>
+        <p className="text-muted-foreground text-xs">Vrátí seznam domén dodavatelů, které má doplněk kontrolovat. Doplněk volá při startu a podle odpovědi aktivuje sledování jen na nastavených doménách.</p>
+        <pre className="bg-secondary rounded-md p-3 text-xs overflow-x-auto font-mono">{`GET ${base}/functions/getDomainsForExtension
+Authorization: Bearer fsk_...
+→ { domains: [{ domain, label, feed_id, has_category_filter }], count }`}</pre>
+      </div>
+
+      <div className="space-y-2">
         <h4 className="font-semibold font-mono">GET /functions/getProductsForExtension</h4>
         <p className="text-muted-foreground text-xs">Stáhne produkty pro doménu dodavatele. Pokud je k doméně nastavený dodavatel s feedem a kategoriemi, vrátí se vyfiltrovaný set; jinak celý feed. Odpověď obsahuje vše potřebné pro lokální párování (EAN, kód, tokeny, alternativní názvy).</p>
         <pre className="bg-secondary rounded-md p-3 text-xs overflow-x-auto font-mono">{`GET ${base}/functions/getProductsForExtension?domain=dodavatel.cz&limit=3000
