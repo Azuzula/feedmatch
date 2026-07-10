@@ -8,6 +8,9 @@
     "label": {
       "type": "string"
     },
+    "feed_id": {
+      "type": "string"
+    },
     "category_filter": {
       "type": "array",
       "items": {

@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import FeedColumnMapper from '@/components/FeedColumnMapper';
 import { Plus, RefreshCw, Pencil, Trash2, Loader2, Search } from 'lucide-react';
 
-const EMPTY = { name: '', url: '', format: 'xml_heureka', delimiter: ',', sync_time: '03:00', mapping: {} };
+const EMPTY = { name: '', url: '', format: 'xml_heureka', delimiter: ',', encoding: 'utf-8', sync_time: '03:00', mapping: {} };
 
 export default function Feeds() {
   const [feeds, setFeeds] = useState([]);
@@ -31,7 +31,7 @@ export default function Feeds() {
   const preview = async () => {
     setPreviewing(true);
     try {
-      const res = await base44.functions.invoke('previewFeed', { url: form.url, format: form.format, delimiter: form.delimiter });
+      const res = await base44.functions.invoke('previewFeed', { url: form.url, format: form.format, delimiter: form.delimiter, encoding: form.encoding || 'utf-8' });
       setFields(res.data.fields || []);
       setSample(res.data.sampleRows || []);
       if (res.data.itemPath && !form.mapping.item_path) setForm({ ...form, mapping: { ...form.mapping, item_path: res.data.itemPath } });
@@ -112,6 +112,17 @@ export default function Feeds() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5"><Label className="text-xs">Čas denní synchronizace</Label><Input type="time" value={form.sync_time} onChange={(e) => setForm({ ...form, sync_time: e.target.value })} /></div>
               {(form.format === 'csv') && <div className="space-y-1.5"><Label className="text-xs">Oddělovač</Label><Input value={form.delimiter} onChange={(e) => setForm({ ...form, delimiter: e.target.value })} maxLength={1} /></div>}
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs">Kódování feedu</Label>
+              <Select value={form.encoding || 'utf-8'} onValueChange={(v) => setForm({ ...form, encoding: v })}>
+                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="utf-8">UTF-8</SelectItem>
+                  <SelectItem value="windows-1250">Windows-1250 (CZ)</SelectItem>
+                  <SelectItem value="iso-8859-2">ISO-8859-2</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <Button variant="outline" size="sm" onClick={preview} disabled={!form.url || previewing}>
               {previewing ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Search className="w-4 h-4 mr-1" />} Detekovat sloupce

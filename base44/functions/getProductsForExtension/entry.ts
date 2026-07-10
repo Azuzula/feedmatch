@@ -19,13 +19,16 @@ Deno.serve(async (req) => {
     const limit = Math.min(parseInt(url.searchParams.get('limit') || '3000'), 5000);
 
     let categoryFilter: string[] | null = null;
+    let feedFilter: string | null = null;
     if (domain) {
       const domains = await base44.asServiceRole.entities.SupplierDomain.filter({ created_by_id: owner.id, domain });
-      if (domains.length && domains[0].category_filter?.length) {
-        categoryFilter = domains[0].category_filter;
+      if (domains.length) {
+        if (domains[0].feed_id) feedFilter = domains[0].feed_id;
+        if (domains[0].category_filter?.length) categoryFilter = domains[0].category_filter;
       }
     }
     const query: any = { created_by_id: owner.id };
+    if (feedFilter) query.feed_id = feedFilter;
     if (categoryFilter) query.category = { $in: categoryFilter };
 
     const products = await base44.asServiceRole.entities.Product.filter(query, '-updated_date', limit);
@@ -33,7 +36,7 @@ Deno.serve(async (req) => {
       id: p.id, name: p.name, ean: p.ean, supplier_code: p.supplier_code,
       purchase_price: p.purchase_price, sale_price: p.sale_price,
       stock_qty: p.stock_qty, stock_unit: p.stock_unit, category: p.category,
-      name_normalized: p.name_normalized, tokens: p.tokens, alt_tokens: p.alt_tokens
+      alternative_names: p.alternative_names, name_normalized: p.name_normalized, tokens: p.tokens, alt_tokens: p.alt_tokens
     }));
     return Response.json({ products: data, count: data.length, cached_at: new Date().toISOString() });
   } catch (error) {

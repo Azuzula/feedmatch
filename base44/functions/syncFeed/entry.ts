@@ -38,6 +38,11 @@ function normalizeTokens(input: string): { normalized: string; tokens: string[] 
   return { normalized: tokens.join(' '), tokens };
 }
 
+function decodeBytes(buf: ArrayBuffer, encoding: string) {
+  const labels: Record<string, string> = { 'utf-8': 'utf-8', 'windows-1250': 'windows-1250', 'cp1250': 'windows-1250', 'iso-8859-2': 'iso-8859-2', 'iso8859-2': 'iso-8859-2' };
+  try { return new TextDecoder(labels[encoding] || 'utf-8').decode(buf); }
+  catch { return new TextDecoder('utf-8').decode(buf); }
+}
 function stripBom(s: string) {
   return s.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 }
@@ -115,7 +120,8 @@ Deno.serve(async (req) => {
     try {
       const res = await fetch(feed.url, { headers: { 'User-Agent': 'FeedSpy/1.0' } });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      const raw = await res.text();
+      const buf = await res.arrayBuffer();
+      const raw = decodeBytes(buf, feed.encoding || 'utf-8');
       const m = feed.mapping || {};
       let records: any[] = [];
 
@@ -186,6 +192,7 @@ Deno.serve(async (req) => {
           };
         });
 
+      const categories = Array.from(new Set(records.map((r) => r.category).filter(Boolean)));
       let created = 0;
       const batch = 200;
       for (let i = 0; i < toCreate.length; i += batch) {
@@ -198,7 +205,8 @@ Deno.serve(async (req) => {
         last_sync_at: new Date().toISOString(),
         last_sync_status: 'success',
         last_sync_error: '',
-        product_count: created
+        product_count: created,
+        categories
       });
 
       return Response.json({ success: true, count: created });

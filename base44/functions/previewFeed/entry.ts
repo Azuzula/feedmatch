@@ -1,6 +1,11 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { XMLParser } from 'npm:fast-xml-parser@4.4.1';
 
+function decodeBytes(buf: ArrayBuffer, encoding: string) {
+  const labels: Record<string, string> = { 'utf-8': 'utf-8', 'windows-1250': 'windows-1250', 'cp1250': 'windows-1250', 'iso-8859-2': 'iso-8859-2', 'iso8859-2': 'iso-8859-2' };
+  try { return new TextDecoder(labels[encoding] || 'utf-8').decode(buf); }
+  catch { return new TextDecoder('utf-8').decode(buf); }
+}
 function stripBom(s: string) {
   return s.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 }
@@ -47,12 +52,13 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     const body = await req.json();
-    const { url, format, delimiter = ',' } = body;
+    const { url, format, delimiter = ',', encoding = 'utf-8' } = body;
     if (!url) return Response.json({ error: 'url required' }, { status: 400 });
 
     const res = await fetch(url, { headers: { 'User-Agent': 'FeedSpy/1.0' } });
     if (!res.ok) return Response.json({ error: 'Feed download failed: ' + res.status }, { status: 502 });
-    const raw = await res.text();
+    const buf = await res.arrayBuffer();
+    const raw = decodeBytes(buf, encoding || 'utf-8');
     const sample = raw.slice(0, 200000);
 
     if (format === 'csv' || format === 'tsv') {
