@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useLang } from '@/i18n/LanguageContext';
@@ -12,7 +12,7 @@ import { Copy, RefreshCw, Loader2, Check } from 'lucide-react';
 export default function Settings() {
   const { user } = useAuth();
   const { lang, setLang } = useLang();
-  const [apiKey, setApiKey] = useState(user?.api_key || '');
+  const [apiKey, setApiKey] = useState('');
   const [copied, setCopied] = useState(false);
   const [regen, setRegen] = useState(false);
   const [billing, setBilling] = useState({
@@ -21,6 +21,8 @@ export default function Settings() {
     billing_zip: user?.billing_zip || '', billing_country: user?.billing_country || 'CZ', billing_ico: user?.billing_ico || ''
   });
   const [savingBilling, setSavingBilling] = useState(false);
+
+  useEffect(() => { base44.entities.ApiKey.list('-created_date', 1).then((r) => setApiKey(r[0]?.api_key || '')).catch(() => {}); }, []);
 
   const regenKey = async () => {
     setRegen(true);

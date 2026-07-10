@@ -7,12 +7,10 @@ Deno.serve(async (req) => {
     const apiKey = auth.replace(/^Bearer\s+/i, '').trim();
     if (!apiKey) return Response.json({ error: 'Missing API key' }, { status: 401 });
 
-    const users = await base44.asServiceRole.entities.User.filter({ api_key: apiKey });
-    if (!users.length) return Response.json({ error: 'Invalid API key' }, { status: 401 });
-    const owner = users[0];
-    if (owner.subscription_status === 'expired') {
-      return Response.json({ error: 'Subscription expired' }, { status: 403 });
-    }
+    const keys = await base44.asServiceRole.entities.ApiKey.filter({ api_key: apiKey });
+    if (!keys.length) return Response.json({ error: 'Invalid API key' }, { status: 401 });
+    const owner = await base44.asServiceRole.entities.User.get(keys[0].created_by_id);
+    if (!owner) return Response.json({ error: 'Invalid API key' }, { status: 401 });
 
     const url = new URL(req.url);
     const domain = url.searchParams.get('domain');
