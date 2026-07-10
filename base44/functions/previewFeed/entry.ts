@@ -1,6 +1,24 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { XMLParser } from 'npm:fast-xml-parser@4.4.1';
 
+function stripBom(s: string) {
+  return s.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
+function detectDelimiter(text: string, preferred: string) {
+  const firstLine = (text.split('\n')[0] || '');
+  const candidates = [preferred, ';', '\t', ',', '|'];
+  let best = preferred || ','; let bestCount = 0;
+  for (const d of candidates) {
+    if (!d) continue;
+    let count = 0; let inQ = false;
+    for (const c of firstLine) {
+      if (c === '"') inQ = !inQ;
+      else if (!inQ && c === d) count++;
+    }
+    if (count > bestCount) { bestCount = count; best = d; }
+  }
+  return best || ',';
+}
 function parseCsv(text: string, delimiter: string) {
   const rows: string[][] = [];
   let row: string[] = [];
@@ -38,8 +56,9 @@ Deno.serve(async (req) => {
     const sample = raw.slice(0, 200000);
 
     if (format === 'csv' || format === 'tsv') {
-      const delim = format === 'tsv' ? '\t' : delimiter;
-      const rows = parseCsv(sample, delim);
+      const clean = stripBom(sample);
+      const delim = format === 'tsv' ? '\t' : detectDelimiter(clean, delimiter);
+      const rows = parseCsv(clean, delim);
       if (!rows.length) return Response.json({ fields: [], sampleRows: [] });
       const fields = rows[0].map((h) => h.trim());
       const sampleRows = rows.slice(1, 6).map((r) => {

@@ -38,6 +38,24 @@ function normalizeTokens(input: string): { normalized: string; tokens: string[] 
   return { normalized: tokens.join(' '), tokens };
 }
 
+function stripBom(s: string) {
+  return s.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
+function detectDelimiter(text: string, preferred: string) {
+  const firstLine = (text.split('\n')[0] || '');
+  const candidates = [preferred, ';', '\t', ',', '|'];
+  let best = preferred || ','; let bestCount = 0;
+  for (const d of candidates) {
+    if (!d) continue;
+    let count = 0; let inQ = false;
+    for (const c of firstLine) {
+      if (c === '"') inQ = !inQ;
+      else if (!inQ && c === d) count++;
+    }
+    if (count > bestCount) { bestCount = count; best = d; }
+  }
+  return best || ',';
+}
 function parseCsv(text: string, delimiter: string) {
   const rows: string[][] = [];
   let row: string[] = []; let cur = ''; let inQ = false;
@@ -102,8 +120,9 @@ Deno.serve(async (req) => {
       let records: any[] = [];
 
       if (feed.format === 'csv' || feed.format === 'tsv') {
-        const delim = feed.format === 'tsv' ? '\t' : (feed.delimiter || ',');
-        const rows = parseCsv(raw, delim);
+        const clean = stripBom(raw);
+        const delim = feed.format === 'tsv' ? '\t' : detectDelimiter(clean, feed.delimiter || ',');
+        const rows = parseCsv(clean, delim);
         if (!rows.length) throw new Error('Empty CSV');
         const header = rows[0].map((h) => h.trim());
         const idx = (name: string) => header.indexOf(name);
