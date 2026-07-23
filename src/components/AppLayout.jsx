@@ -22,7 +22,7 @@ export default function AppLayout() {
         <div className="h-14 flex items-center px-5 border-b border-border">
           <Link to="/dashboard" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">F</div>
-            <span className="font-heading font-semibold">FeedSpy</span>
+            <span className="font-heading font-semibold">Feed Match</span>
           </Link>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
