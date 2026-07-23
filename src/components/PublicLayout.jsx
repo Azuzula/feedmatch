@@ -14,7 +14,7 @@ export default function PublicLayout() {
         <div className="max-w-6xl mx-auto h-14 flex items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">F</div>
-            <span className="font-heading font-semibold">FeedSpy</span>
+            <span className="font-heading font-semibold">Feed Match</span>
           </Link>
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
